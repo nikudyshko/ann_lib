@@ -1,5 +1,5 @@
-#ifndef ANN_H 
-#define ANN_H 
+#ifndef NNETWORK_H
+#define NNETWORK_H 
 
 #ifdef __BORLANDC__ 
 #include <float.h> 
@@ -7,5 +7,13 @@
 #define isinf _isinf 
 #define isnan _isnan 
 #endif 
+
+class NNetwork
+{
+private: 
+public: 
+	NNetwork(std::vector< std::pair< size_t, std::string > > &architect_); 
+	~NNetwork(); 
+};
 
 #endif
