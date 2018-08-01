@@ -29,7 +29,7 @@ private:
 	std::vector< Layer > network; 
 	//train_set - array of samples for training neural network 
 	//validation_set - array of samples for testing neural network 
-	std::vector< sample* > train_set, validation_set; 
+	std::vector< sample > train_set, validation_set; 
 
 	//zero_gradient() - fills gradient fields with zeros 
 	void zero_gradient(); 
@@ -39,6 +39,12 @@ private:
 	void back_propagation(arma::vec const &out); 
 	//update_weights() - updates weights and biases according to ADAM algorithm 
 	void update_weights(int iter, size_t batch_size, double learning_rate, double reg_rate); 
+
+	std::vector< sample > load_data_set(std::string const &file_name); 
+
+	void clear_neural_net(); 
+	void clear_train_set(); 
+	void clear_validation_set(); 
 public: 
 	//init_weights() - initializes weights and biases of network 
 	void init_weights(); 
