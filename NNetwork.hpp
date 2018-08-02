@@ -12,7 +12,9 @@
 //necessary includes, armadillo - for linear algebra stuff 
 #include <vector> 
 #include <string> 
-#include <armadillo>
+#include <armadillo> 
+//Sample - for sample structure 
+#include <Sample.hpp>
 
 //implementing of neural network 
 class NNetwork
@@ -40,10 +42,14 @@ private:
 	//update_weights() - updates weights and biases according to ADAM algorithm 
 	void update_weights(int iter, size_t batch_size, double learning_rate, double reg_rate); 
 
+	//function that loads dataset. Used by load_train_set and load_validation_set 
 	std::vector< Sample > load_data_set(std::string const &file_name); 
 
+	//function that clears memory dedicated to neural network
 	void clear_neural_net(); 
+	//function that clears memory dedicated to train_set 
 	void clear_train_set(); 
+	//function that clears memory dedicated to validation_set 
 	void clear_validation_set(); 
 public: 
 	//init_weights() - initializes weights and biases of network 
