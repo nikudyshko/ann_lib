@@ -14,7 +14,8 @@
 #include <string> 
 #include <armadillo> 
 //Sample - for sample structure 
-#include <Sample.hpp>
+#include "Layer.hpp" 
+#include "Sample.hpp" 
 
 //implementing of neural network 
 class NNetwork
