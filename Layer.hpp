@@ -8,16 +8,10 @@
 #include <armadillo> 
 #include "Activation.hpp"
 
-class Layer
-{ 
-public: 
-	virtual void forward(arma::vec const &input_) {}; 
-	virtual void backward(arma::vec const &error_) {}; 
-}; 
-
-class Dense : public Layer
+class Dense
 { 
 private: 
+	friend class NNetwork; 
 	size_t num_neurons; 
 	const double bias_const = 0.1; 
 	arma::vec biases, grad_b; 
@@ -27,14 +21,13 @@ private:
 	Activation activative; 
 	Derivative derivative; 
 
+	void zero_weights(); 
 	void init_weights(); 
-	void zero_gradient(); 
 public: 
 	arma::vec input, error; 
 	arma::vec logit, activ, delta; 
-
-	virtual void forward(arma::vec const &input_); 
-	virtual void backward(arma::vec const &error_); 
+	void forward(arma::vec const &input_); 
+	void backward(arma::vec const &error_); 
 
 	Dense(size_t previous_num_neurons, size_t current_num_neurons, std::string const &fun_name); 
 	~Dense(); 
@@ -79,7 +72,7 @@ void Dense::init_weights()
 	this->weights.imbue(dist(gen)); 
 } 
 
-void Dense::zero_gradient() 
+void Dense::zero_weights()
 { 
 	this->grad_b.zeros(); 
 	this->grad_w.zeros(); 
@@ -93,15 +86,26 @@ void Dense::forward(arma::vec const &input_)
 } 
 
 void Dense::backward(arma::vec const &error_)
-{ 
-	this->derivative(this->activ, this->jacoby); 
-	this->delta = this->jacoby*error_; 
+{
+	this->derivative(this->activ, this->jacoby);
+	this->delta = this->jacoby*error_;
 	this->error = this->weights.t()*this->delta; 
-	this->grad_b = this->delta; 
-	this->grad_w = this->delta*this->input.t(); 
+	this->grad_b += this->delta; 
+	this->grad_w += this->delta*this->input.t(); 
 } 
 
-class CrossEntropyLoss : public Layer
+class Loss
+{
+public: 
+	double loss; 
+
+	arma::vec error; 
+
+	virtual void forward(arma::vec const &net_output, arma::vec const &true_output); 
+	virtual void backward(arma::vec const &net_output, arma::vec const &true_output); 
+};
+
+class CrossEntropyLoss : public Loss 
 { 
 public: 
 	double loss; 
